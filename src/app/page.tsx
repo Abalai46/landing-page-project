@@ -1,103 +1,87 @@
-import Image from "next/image";
+import Link from "next/link";
+import fs from "fs";
+import path from "path";
 
-export default function Home() {
+// Ensure this page runs on the Node.js runtime (not Edge) so that 'fs' is available
+export const runtime = 'nodejs';
+
+export default async function Home() {
+  // Auto-discover QR pages from src/app
+  const appDir = path.join(process.cwd(), "src", "app");
+  const dirents = fs.readdirSync(appDir, { withFileTypes: true });
+  const qrDirRegex = /^\d+-.+-qr-\d+$/i;
+  const palette = [
+    "bg-blue-600",
+    "bg-green-600",
+    "bg-purple-600",
+    "bg-orange-600",
+    "bg-pink-600",
+    "bg-teal-600",
+    "bg-amber-600",
+    "bg-cyan-600",
+    "bg-indigo-600",
+    "bg-red-600",
+    "bg-emerald-600",
+    "bg-fuchsia-600",
+  ];
+
+  const qrLinks = dirents
+    .filter((d) => d.isDirectory() && qrDirRegex.test(d.name))
+    .filter((d) => fs.existsSync(path.join(appDir, d.name, "page.tsx")))
+    .map((d) => d.name)
+    .map((dirname) => {
+      const parts = dirname.split("-");
+      const num = parts[0];
+      const qrIndex = parts.findIndex((p) => p.toLowerCase() === "qr");
+      const pageNo = qrIndex >= 0 && parts[qrIndex + 1] ? parts[qrIndex + 1] : "1";
+      const nameTokens = qrIndex > 0 ? parts.slice(1, qrIndex) : parts.slice(1);
+      const names = nameTokens.map((n) => n.toUpperCase()).join(", ");
+      const title = `${num}. ${names} QR ${pageNo}`.trim();
+      // Simple color selection based on hash
+      const idx = Math.abs(
+        [...dirname].reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
+      ) % palette.length;
+      return { title, href: `/${dirname}`, color: palette[idx] };
+    })
+    .sort((a, b) => {
+      const an = parseInt(a.title.split(".")[0] || "0", 10);
+      const bn = parseInt(b.title.split(".")[0] || "0", 10);
+      if (an !== bn) return an - bn;
+      return a.title.localeCompare(b.title);
+    });
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="container mx-auto py-4 px-4">
+      
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* QR Links Section */}
+      <section className="mb-8">
+        <div className="grid grid-cols-1 gap-3 max-w-md mx-auto">
+          {qrLinks.map((item, index) => (
+            <Link key={index} href={item.href} className="group block">
+              <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-4 border border-gray-200 hover:border-gray-300">
+                <div className="flex items-center space-x-3">
+                  <div className={`w-10 h-10 ${item.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                    <div className="w-5 h-5 bg-white rounded opacity-80"></div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <div className="text-gray-400 group-hover:text-blue-600 transition-colors flex-shrink-0">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      
     </div>
   );
 }
