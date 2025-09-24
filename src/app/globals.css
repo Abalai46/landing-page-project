@@ -5,9 +5,10 @@
   --foreground: #171717;
   /* Approximate heights based on image aspect ratios */
   /* Header ratio: 200 / 1024 = 0.195; Footer ratio: 300 / 1024 = 0.293 */
-  --header-h: calc(100vw * 0.195);
+  /* Clamp the header height to avoid too much whitespace on tall/short screens */
+  --header-h: clamp(44px, 16vw, 120px);
   /* Keep footer within a sensible range using clamp(min, preferred, max) */
-  --footer-h: clamp(72px, 29.3vw, 256px);
+  --footer-h: clamp(72px, 29.3vw, 220px);
 }
 
 @theme inline {

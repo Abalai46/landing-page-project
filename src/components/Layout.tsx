@@ -11,7 +11,7 @@ export default function Layout({ children }: LayoutProps) {
       <Header />
       <main
         className="flex-1"
-        style={{ paddingTop: 'var(--header-h)', paddingBottom: 'var(--footer-h)' }}
+        style={{ paddingTop: 0, paddingBottom: 'var(--footer-h)' }}
       >
         {children}
       </main>
