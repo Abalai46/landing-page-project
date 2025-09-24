@@ -9,7 +9,7 @@ export default function Footer() {
           alt="FTI Footer"
           fill
           sizes="100vw"
-          className="object-contain"
+          className="object-cover object-center"
           priority
         />
       </div>
