@@ -9,7 +9,10 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
-      <main className="flex-1 pt-4 pb-6 md:pt-28 md:pb-28 lg:pt-32 lg:pb-32">
+      <main
+        className="flex-1"
+        style={{ paddingTop: 'var(--header-h)', paddingBottom: 'var(--footer-h)' }}
+      >
         {children}
       </main>
       <Footer />
