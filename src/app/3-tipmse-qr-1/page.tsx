@@ -5,14 +5,20 @@ export const metadata = {
 
 export default function TipmseQr1Page() {
   return (
-    <div className="container mx-auto px-4 py-3 sm:py-4 md:py-6">
-      <div className="max-w-xl sm:max-w-2xl md:max-w-3xl mx-auto text-center bg-white rounded-lg shadow-sm sm:shadow p-4 sm:p-6 md:p-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
-          3. TIPMSE QR 1
-        </h1>
-        <p className="text-sm sm:text-base text-gray-600 mt-3 sm:mt-4">
-          หน้านี้เตรียมไว้สำหรับลิงก์ QR Code
-        </p>
+    <div className="container mx-auto px-4">
+      <div className="min-h-[60vh] md:min-h-[65vh] lg:min-h-[70vh]">
+        <div className="max-w-xl sm:max-w-2xl md:max-w-3xl mx-auto w-full text-center bg-white rounded-lg shadow-sm sm:shadow p-0 overflow-hidden">
+          <div className="mt-0 text-left pt-4 sm:pt-6 md:pt-8 pb-4 sm:pb-6 md:pb-8">
+            <figure>
+              <img
+                src="https://res.cloudinary.com/dlnhxcn9m/image/upload/v1758788074/03_TIPMSE_MICROSITE_yhrqv2.jpg"
+                alt="TIPMSE Microsite"
+                className="w-full h-auto object-contain block"
+                loading="lazy"
+              />
+            </figure>
+          </div>
+        </div>
       </div>
     </div>
   );

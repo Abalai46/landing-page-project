@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Vertical gap between fixed header/footer and page content */
+  --content-gap: 36px;
   /* Approximate heights based on image aspect ratios */
   /* Header ratio: 200 / 1024 = 0.195; Footer ratio: 300 / 1024 = 0.293 */
   /* Clamp the header height to avoid too much whitespace on tall/short screens */
@@ -24,6 +26,14 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+/* Slightly larger content gap on wider viewports */
+@media (min-width: 640px) {
+  :root { --content-gap: 36px; }
+}
+@media (min-width: 768px) {
+  :root { --content-gap: 36px; }
 }
 
 body {
