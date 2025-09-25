@@ -5,10 +5,11 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
       <div className="relative w-full mx-auto overflow-hidden" style={{ height: 'var(--header-h)' }}>
         <Image
-          src="/header-1.png"
+          src="https://res.cloudinary.com/dlnhxcn9m/image/upload/v1758773797/header-1_laoxei.png"
           alt="FTI Header"
           fill
           sizes="100vw"
+          unoptimized
           className="object-contain"
           priority
         />
